@@ -23,7 +23,7 @@ async def on_message(message):
     if message.content.startswith('!sh'):
         # Default Response
         if message.content == '!sh':
-            await message.channel.send('Ooiiii aku sekarang 24/7 online selama setahun thanks to AWS :D ')
+            await message.channel.send('Ooiiii aku sekarang 24/7 online selama setahun thanks to AWS :D, function ku:\n!sh pick\n!sh squad *\*[1-5]\**\n!sh anime *\*judul\**\n!sh manga *\*judul\**\n')
     
         # ML Random Hero & Role Picker (1 Player)
         if message.content.lower().startswith('!sh pick'):
@@ -34,6 +34,9 @@ async def on_message(message):
         if message.content.lower().startswith('!sh squad '):
             try:
                 player_number = int(message.content[len('!sh squad '):])
+                if(player_number<1 or player_number>5):
+                    await message.channel.send('yang betul la yang main biasa 1-5')
+                    return
                 mymessage = await message.channel.send('Yang main react message ku yuk!')
                 await mymessage.add_reaction('\U0001F44D')
             except:
