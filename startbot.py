@@ -2,8 +2,10 @@ import os
 import discord
 import env
 from features import animescrape
+from features import mangascrape
 from features import mlpicker
 import asyncio
+import requests
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -102,5 +104,17 @@ async def on_message(message):
                 output = animescrape.FormatEpisodeDetail(episode)
                 await message.channel.send(output)
             return
-
+        
+        # Baca manga colong dari manga4life
+        if message.content.lower().startswith('!sh manga '):
+            keyword = message.content[len('!sh manga '):]
+            result = mangascrape.SearchManga(keyword)
+            response = ''
+            if len(result) == 0:
+                await message.channel.send('Nggak nemu itu')
+                return
+            for manga in result:
+                manga.totalchapter = mangascrape.GetTotalChapter(manga.titlelink)
+                response += manga.title+' ['+str(manga.totalchapter)+' Chapter]\nhttps://makusa.masuk.web.id/manga?name='+manga.titlelink+'&chapter='+str(manga.totalchapter)+'\n\n'
+            await message.channel.send(response)
 client.run(env.TOKEN())
