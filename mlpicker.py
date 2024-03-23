@@ -11,3 +11,11 @@ Roles = ["Exp Laner","Gold Laner","Mid Laner","Jungler","Roamer"]
 
 def getrandomhero(id):
     return Player(id,random.choice(Heroes),random.choice(Roles))
+
+def getrandomsquad(idlist):
+    result = []
+    heroes = random.sample(Heroes,len(idlist))
+    roles = random.sample(Roles,len(idlist))
+    for id,hero,role in zip(idlist,heroes,roles):
+        result.append(Player(id,hero,role))
+    return result
