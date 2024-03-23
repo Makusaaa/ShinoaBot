@@ -1,7 +1,8 @@
 import os
 import discord
 import env
-from features import *
+from features import animescrape
+from features import mlpicker
 import asyncio
 
 intents = discord.Intents.default()
