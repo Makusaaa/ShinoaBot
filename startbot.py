@@ -2,8 +2,8 @@ import os
 import discord
 import env
 import mlpicker
-# from dotenv import load_dotenv
-# load_dotenv()
+import animescrape
+import asyncio
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -18,8 +18,8 @@ async def on_message(message):
     if message.author == client.user :
         return
     
-    # Default Response
     if message.content.startswith('!sh'):
+        # Default Response
         if message.content == '!sh':
             await message.channel.send('Ooiiii aku sekarang 24/7 online selama setahun thanks to AWS :D ')
     
@@ -46,5 +46,61 @@ async def on_message(message):
             response = ''
             for res in result: response += f'{res.id} main {res.hero} jadi {res.role}\n'
             await message.channel.send(response+'goodluck kalian! \U0001F60A')
+
+        # Nonton anime colong data dari allmanga.to
+        if message.content.lower().startswith('!sh nonton '):
+            keyword = message.content[len('!sh nonton '):]
+            anime_list = animescrape.SearchAnime(keyword)
+            if len(anime_list) == 0:
+                await message.channel.send('Nggak nemu animenya')
+                return
+            output = ''
+            output += 'Anime yang kutemu:\n'
+            for i in range(len(anime_list)):
+                output += str(i+1)+'. '+anime_list[i].title+'\n'
+            await message.channel.send(output)
+            await message.channel.send('Mau nonton yg mana?')
+            while True:
+                try:
+                    input = await client.wait_for('message',check=lambda m: m.author == message.author and m.channel == message.channel, timeout=30.0)
+                except asyncio.TimeoutError:
+                    await message.channel.send('Lama banget ditanya bknnya jwb males dah')
+                    return
+                else:
+                    if input.content.startswith('!sh'):
+                        return
+                    if not input.content.isdigit():
+                        await message.channel.send('Angka aja woiiii mau yg mana')
+                    elif int(input.content) < 1 or int(input.content) > len(anime_list):
+                        await message.channel.send('Gaada pilihan itu gmn sih')
+                    else:
+                        anime = anime_list[int(input.content)-1]
+                        break
+            await message.channel.send('Episode berapa? aku cek ada sekitar '+str(anime.episodecount)+' episode')
+            while True:
+                try:
+                    input = await client.wait_for('message',check=lambda m: m.author == message.author and m.channel == message.channel, timeout=30.0)
+                except asyncio.TimeoutError:
+                    await message.channel.send('Lama banget ditanya bknnya jwb males dah')
+                    return
+                else:
+                    if input.content.lower().startswith('!sh'):
+                        return
+                    if not input.content.isdigit():
+                        await message.channel.send('Angka aja woiiii mau episode brp')
+                    elif int(input.content) < 1 or int(input.content) > int(anime.episodecount):
+                        await message.channel.send('Ga ada episode segitu')
+                    else:
+                        result = input.content
+                        break
+            episode = animescrape.GetEpisodeDetail(anime.id,result)
+            if episode == 'API Error':
+                await message.channel.send(f'Episode {input.content}:API returned null, ngga nemu nih di API nya')
+            if episode == 'Episode not found!':
+                await message.channel.send(f'Episode {input.content}: Episode not found, blm ada nih data episode nya :(')
+            elif episode != None:
+                output = animescrape.FormatEpisodeDetail(episode)
+                await message.channel.send(output)
+            return
 
 client.run(env.TOKEN())
