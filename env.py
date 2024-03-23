@@ -1,1 +1,0 @@
-def TOKEN(): return 'Token Here'
