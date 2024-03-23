@@ -46,7 +46,6 @@ def GetEpisodeDetail(id,ep):
     link = 'https://api.allanime.day/api?variables={"showId":"'+id+'","translationType":"sub","episodeString":"'+str(ep)+'"}&extensions={"persistedQuery":{"version":1,"sha256Hash":"5f1a64b73793cc2234a389cf3a8f93ad82de7043017dd551f38f65b89daa65e0"}}'
     result = requests.get(link, headers=Headers)
     json_result =  json.loads(result.text)
-    print(result)
     if('data' not in json_result):
         return 'API Error'
     episode_data = json_result['data']['episode']
@@ -83,6 +82,7 @@ def GetDownloadQualities(link,captcha):
 
 def FormatEpisodeDetail(episode):
     output = ''
+    if episode.title == None: episode.title = 'no title'
     output += str('Ep.'+str(episode.episodenumber)+' '+episode.title+'\n')
     output += str('Stream: ')
     checkemb = False
