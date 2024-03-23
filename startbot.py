@@ -53,8 +53,8 @@ async def on_message(message):
             await message.channel.send(response+'goodluck kalian! \U0001F60A')
 
         # Nonton anime colong data dari allmanga.to
-        if message.content.lower().startswith('!sh nonton '):
-            keyword = message.content[len('!sh nonton '):]
+        if message.content.lower().startswith('!sh anime '):
+            keyword = message.content[len('!sh anime '):]
             anime_list = animescrape.SearchAnime(keyword)
             if len(anime_list) == 0:
                 await message.channel.send('Nggak nemu animenya')
