@@ -2,6 +2,7 @@ import os
 import discord
 import env
 from features import animescrape
+from features import cartoonscrape
 from features import mangascrape
 from features import mlpicker
 import asyncio
@@ -120,4 +121,18 @@ async def on_message(message):
                 manga.totalchapter = mangascrape.GetTotalChapter(manga.titlelink)
                 response += manga.title+' ['+str(manga.totalchapter)+' Chapter]\nhttps://makusa.masuk.web.id/manga?name='+manga.titlelink+'&chapter='+str(manga.totalchapter)+'\n\n'
             await message.channel.send(response)
+
+        # Nonton Kartun colong dari WCO
+        if message.content.lower().startswith('!sh wco '):
+            keyword = message.content[len('!sh wco '):]
+            result = cartoonscrape.GetAllLinks(keyword)
+            if(result == 'Not Link'):
+                await message.channel.send('butuhnya link wco ya dari wcofun.net')
+                return
+            if(result == None):
+                await message.channel.send('nggak nemu itu')
+                return
+            for v in result:
+                await message.channel.send('['+v.contents[0]+'](<'+cartoonscrape.GetLink(v['href'])+'>)')
+
 client.run(env.TOKEN())
