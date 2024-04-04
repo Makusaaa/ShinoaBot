@@ -119,7 +119,7 @@ async def on_message(message):
                 return
             for manga in result:
                 manga.totalchapter = mangascrape.GetTotalChapter(manga.titlelink)
-                response += manga.title+' ['+str(manga.totalchapter)+' Chapter]\nhttps://makusa.masuk.web.id/manga?name='+manga.titlelink+'&chapter='+str(manga.totalchapter)+'\n\n'
+                response += manga.title+' ['+str(manga.totalchapter)+' Chapter]\nhttp://13.55.218.220//manga?name='+manga.titlelink+'&chapter='+str(manga.totalchapter)+'\n\n'
             await message.channel.send(response)
 
         # Nonton Kartun colong dari WCO
