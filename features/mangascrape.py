@@ -14,7 +14,7 @@ def SearchManga(keyword):
     return result
 
 def GetTotalChapter(name):
-    link = 'https://www.manga4life.com/manga/'+name
+    link = 'https://www.manga4life.com/mangalife/'+name
     manga_page = requests.get(link).text
     a = manga_page.find('vm.Chapters = [{"Chapter":"')+len('vm.Chapters = [{"Chapter":"')+1
     b = manga_page[a:].find('"')+a-1
